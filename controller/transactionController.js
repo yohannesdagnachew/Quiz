@@ -22,6 +22,7 @@ export const deposit = async (req, res, next) => {
     }
     else if(type === 'bonus') {
       amount = 25
+       callback_url = "https://iq-football.netlify.app/"
     }
 
 
