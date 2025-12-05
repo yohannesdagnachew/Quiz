@@ -136,11 +136,11 @@ export const check = async (req, res, next) => {
     }
 
     // 2) Check it belongs to this session
-    if (!transaction.session || !transaction.session.equals(session._id)) {
-      return res
-        .status(400)
-        .json({ message: "Transaction does not belong to this session" });
-    }
+    // if (!transaction.session || !transaction.session.equals(session._id)) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Transaction does not belong to this session" });
+    // }
 
     if (transaction.status !== "success") {
       return res.status(400).json({ message: "Invalid transaction status" });
