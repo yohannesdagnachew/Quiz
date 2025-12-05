@@ -132,6 +132,8 @@ export const check = async (req, res, next) => {
       session: session._id,
     });
 
+    console.log("Transaction found:", transaction);
+
     if (!transaction || transaction.status !== 'success') {
       return res.status(400).json({ message: "Invalid transaction" });
     }
