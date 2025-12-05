@@ -7,7 +7,25 @@ export const deposit = async (req, res, next) => {
   try {
     const { token, type, meta } = req.body;
 
-    const amount = 50
+    let amount = 100
+    let callback_url = "https://tinder-addis.netlify.app/"
+
+    if(type === 'quiz') {
+      amount = 25
+      callback_url = "https://iq2025.netlify.app/"
+    }
+    else if(type === 'horoscope') {
+      amount = 25
+    }
+    else if(type === 'lookup') {
+      amount = 75
+    }
+    else if(type === 'bonus') {
+      amount = 25
+    }
+
+
+
 
     // Validate required fields
     if (!token) {
@@ -49,8 +67,8 @@ export const deposit = async (req, res, next) => {
           currency: "ETB",
           email: `quizbot@gmail.com`,
           tx_ref: txRef,
-          callback_url: "https://tinder-addis.netlify.app/",
-          return_url: "https://tinder-addis.netlify.app/",
+          callback_url: callback_url,
+          return_url: callback_url,
           "customization[title]": "Web Payment",
           "customization[description]": "Access premium features",
         },
