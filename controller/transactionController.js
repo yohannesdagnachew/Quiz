@@ -106,46 +106,55 @@ export const deposit = async (req, res, next) => {
 
 
 
+
 export const check = async (req, res, next) => {
   try {
     const { token, tr } = req.body;
 
-    // Validate token
     if (!token) {
       return res.status(400).json({ message: "Token is required" });
     }
 
-    // Validate transaction id
     if (!tr) {
       return res.status(400).json({ message: "Transaction ID is required" });
     }
 
-    // Validate session
     const session = await Session.findOne({ token });
     if (!session) {
       return res.status(400).json({ message: "Invalid session token" });
     }
 
-    // Validate transaction belongs to this session
-    const transaction = await Transaction.findOne({
-      _id: tr,
-      session: session._id,
-    });
+    console.log("Session found:", session._id.toString());
 
-    console.log("Transaction found:", transaction);
+    // 1) Find transaction only by ID
+    const transaction = await Transaction.findById(tr);
 
-    if (!transaction || transaction.status !== 'success') {
-      return res.status(400).json({ message: "Invalid transaction" });
+    console.log("Raw transaction:", transaction);
+
+    if (!transaction) {
+      return res.status(400).json({ message: "Transaction not found" });
+    }
+
+    // 2) Check it belongs to this session
+    if (!transaction.session || !transaction.session.equals(session._id)) {
+      return res
+        .status(400)
+        .json({ message: "Transaction does not belong to this session" });
+    }
+
+    if (transaction.status !== "success") {
+      return res.status(400).json({ message: "Invalid transaction status" });
     }
 
     return res.status(200).json({
       message: "Success",
-      transaction: transaction.status
+      transaction: transaction.status,
     });
   } catch (err) {
     console.error("Check error:", err);
     next(err);
   }
 };
+
 
 
